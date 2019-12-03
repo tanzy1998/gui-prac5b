@@ -1,0 +1,11 @@
+﻿  p5b.cpp
+c:\users\taruc\desktop\p5b\p5b\p5b.cpp(22): warning C4060: switch statement contains no 'case' or 'default' labels
+c:\users\taruc\desktop\p5b\p5b\p5b.cpp(86): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\taruc\desktop\p5b\p5b\p5b.cpp(95): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\taruc\desktop\p5b\p5b\p5b.cpp(104): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\taruc\desktop\p5b\p5b\p5b.cpp(117): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\taruc\desktop\p5b\p5b\p5b.cpp(127): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\taruc\desktop\p5b\p5b\p5b.cpp(165): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+c:\users\taruc\desktop\p5b\p5b\p5b.cpp(174): warning C4305: '+=': truncation from 'double' to 'float'
+  P5B.vcxproj -> C:\Users\TARUC\Desktop\P5B\Debug\P5B.exe
+  P5B.vcxproj -> C:\Users\TARUC\Desktop\P5B\Debug\P5B.pdb (Partial PDB)
