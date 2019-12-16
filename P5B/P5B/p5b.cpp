@@ -1,43 +1,55 @@
 #include <Windows.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include <iostream>
-#include <conio.h>
-#include <string>
+#include <math.h>
 
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
 
-#define WINDOW_TITLE "Practical 5"
-float rotatedeg = 0.0, z = 0, speed = 1.0;
+#define WINDOW_TITLE "OpenGL Window"
 
+float speed = 0.0;
+int open = 0, close = 0;
+float transf = 14.5;
+int x = 0, y = 0, z = 0;
+int x2 = 0, y2 = 0, z2 = 0;
+float speed2 = 0.1, speed3 = -0.1;
+float sizeFrame = 40.0;
+int e = 0;
+
+float rotateAngle = 0.0f;
+float viewDistance = -60.0;
+float rotateY = 0.0f;
+void sun();
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
-	case WM_CHAR:
-		switch (wParam)
-		{
-			
-		}
-		break;
-
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
 
 	case WM_KEYDOWN:
-		switch (wParam)
+		if (wParam == VK_ESCAPE) PostQuitMessage(0);
+		else if (wParam == 0x4F) //O key
 		{
-		case VK_ESCAPE:
-			PostQuitMessage(0);
-			break;
-		case VK_UP:
-			z += speed;
-			break;
-		case VK_DOWN:
-			z -= speed;
-			break;
+			open = 1;
+		}
+		else if (wParam == 0x43) //C key
+		{
+			close = 1;
+		}
+		else if (wParam == VK_UP) {
+			viewDistance += 10.0f;
+		}
+		else if (wParam == VK_DOWN) {
+			viewDistance -= 10.0f;
+		}
+		else if (wParam == VK_LEFT) {
+			rotateY -= 10.0f;
+		}
+		else if (wParam == VK_RIGHT) {
+			rotateY += 10.0f;
 		}
 		break;
 	default:
@@ -78,118 +90,659 @@ bool initPixelFormat(HDC hdc)
 		return false;
 	}
 }
+//--------------------------------------------------------------------
 
-void topping() {
-	glPushMatrix();
+void tower1() {
+
+	glBegin(GL_QUADS);
+	glColor3ub(153, 76, 0);
+	glVertex3f(-6, 25, 3);
+	glVertex3f(6, 25, 3);
+	glVertex3f(6, 15, 3);
+	glVertex3f(-6, 15, 3);
+
+	glVertex3f(-6, 15, 3);
+	glVertex3f(-6, 15, -3);
+	glVertex3f(6, 15, -3);
+	glVertex3f(6, 15, 3);
+
+	glVertex3f(6, 15, 3);
+	glVertex3f(6, 15, -3);
+	glVertex3f(6, 25, -3);
+	glVertex3f(6, 25, 3);
+
+	glVertex3f(6, 25, 3);
+	glVertex3f(6, 25, -3);
+	glVertex3f(-6, 25, -3);
+	glVertex3f(-6, 25, 3);
+
+	glVertex3f(-6, 25, 3);
+	glVertex3f(-6, 15, 3);
+	glVertex3f(-6, 15, -3);
+	glVertex3f(-6, 25, -3);
+
+	glVertex3f(-6, 25, -3);
+	glVertex3f(6, 25, -3);
+	glVertex3f(6, 15, -3);
+	glVertex3f(-6, 15, -3);
+	glEnd();
+}
+
+void tower2() {
 	GLUquadricObj* cylinder = NULL;
 	cylinder = gluNewQuadric();
-	glTranslatef(-0.025, 0.27, 0.154);
-	glColor3f(1, 1, 0);
-	glRotatef(110, 1, 1, 0);
-	gluCylinder(cylinder, 0.01, 0.01, 0.01, 15, 15);
-	gluDeleteQuadric(cylinder);
-	glPopMatrix();
+	glColor3ub(204, 102, 0);
+	gluCylinder(cylinder, .5, .5, 25, 35, 8);
 
-	glPushMatrix();
-	cylinder = gluNewQuadric();
-	glTranslatef(0.0, 0.35, 0.11);
-	glColor3ub(255, 128, 0);
-	glRotatef(110, 1, 1, 0);
-	gluCylinder(cylinder, 0.01, 0.01, 0.01, 15, 15);
 	gluDeleteQuadric(cylinder);
-	glPopMatrix();
-
-	glPushMatrix();
-	cylinder = gluNewQuadric();
-	glTranslatef(-0.05, 0.35, 0.1);
-	glColor3ub(255, 255, 51);
-	glRotatef(110, 1, 1, 0);
-	gluCylinder(cylinder, 0.01, 0.01, 0.01, 15, 15);
-	gluDeleteQuadric(cylinder);
-	glPopMatrix();
 }
 
-void icecream() {
-	glPushMatrix();
-	GLUquadricObj* sphere = NULL;
-	sphere = gluNewQuadric();
-	glColor3ub(51, 25, 0);
-	glTranslatef(0, 0.23, 0);
-	//glRotatef(270, 1, 0, 0);
-	gluQuadricDrawStyle(sphere, GLU_FILL);
-	gluSphere(sphere, 0.16, 30, 30);
-	gluDeleteQuadric(sphere);
-	glPopMatrix();
+void tower3() {
+	glBegin(GL_QUADS);
+	glColor3ub(102, 51, 0);
+	glVertex3f(-1, 30, .5);
+	glVertex3f(1, 30, .5);
+	glVertex3f(6, 25, 3);
+	glVertex3f(-6, 25, 3);
 
-	glPushMatrix();
-	sphere = gluNewQuadric();
-	glColor3f(1, 1, 1);
-	glTranslatef(0, 0.05, 0);
-	//glRotatef(270, 1, 0, 0);
-	gluQuadricDrawStyle(sphere, GLU_FILL);
-	gluSphere(sphere, 0.175, 30, 30);
-	gluDeleteQuadric(sphere);
-	glPopMatrix();
+	glVertex3f(-6, 25, 3);
+	glVertex3f(-6, 25, -3);
+	glVertex3f(6, 25, -3);
+	glVertex3f(6, 25, 3);
+
+	glVertex3f(6, 25, 3);
+	glVertex3f(6, 25, -3);
+	glVertex3f(1, 30, -.5);
+	glVertex3f(1, 30, .5);
+
+	glVertex3f(1, 30, .5);
+	glVertex3f(1, 30, -.5);
+	glVertex3f(-1, 30, -.5);
+	glVertex3f(-1, 30, .5);
+
+	glVertex3f(-1, 30, .5);
+	glVertex3f(-6, 25, 3);
+	glVertex3f(-6, 25, -3);
+	glVertex3f(-1, 30, -.5);
+
+	glVertex3f(-1, 30, -.5);
+	glVertex3f(1, 30, -.5);
+	glVertex3f(6, 25, -3);
+	glVertex3f(-6, 25, -3);
+	glEnd();
 }
 
-void cone() {
-	glPushMatrix();
-	GLUquadricObj* cyllinder = NULL;
-	cyllinder = gluNewQuadric();
+void tower4() {
+	GLUquadricObj* cylinder = NULL;
+	cylinder = gluNewQuadric();
+	glColor3ub(102, 51, 0);
+	gluCylinder(cylinder, .5, .0, 3, 35, 8);
+
+	gluDeleteQuadric(cylinder);
+}
+
+void tower5() {
+	glBegin(GL_TRIANGLES);
+	glColor3ub(102, 51, 0);
+	glVertex3f(0, 31, 0);
+	glVertex3f(-1, 30, .5);
+	glVertex3f(1, 30, .5);
+
+	glVertex3f(1, 30, .5);
+	glVertex3f(0, 31, 0);
+	glVertex3f(1, 30, -.5);
+
+	glVertex3f(1, 30, -.5);
+	glVertex3f(0, 31, 0);
+	glVertex3f(-1, 30, -.5);
+
+	glVertex3f(-1, 30, -.5);
+	glVertex3f(0, 31, 0);
+	glVertex3f(-1, 30, .5);
+	glEnd();
+}
+
+void tower6() {
+	GLUquadricObj* cylinder = NULL;
+	cylinder = gluNewQuadric();
+	glColor3ub(204, 102, 0);
+	gluCylinder(cylinder, .5, .5, 2, 35, 8);
+
+	gluDeleteQuadric(cylinder);
+}
+
+void tower7() {
+	glBegin(GL_QUADS);
 	glColor3ub(153, 76, 0);
-	glTranslatef(0, -0.5, 0);
-	glRotatef(270, 1, 0, 0);
-	gluQuadricDrawStyle(cyllinder, GLU_FILL);
-	gluCylinder(cyllinder, 0.0, 0.18, 0.5, 20, 30);
-	gluDeleteQuadric(cyllinder);
+	glVertex3f(-6, 15, 3);
+	glVertex3f(6, 15, 3);
+	glVertex3f(6, 0, 3);
+	glVertex3f(-6, 0, 3);
+
+	glVertex3f(-6, 0, 3);
+	glVertex3f(-6, 0, -3);
+	glVertex3f(6, 0, -3);
+	glVertex3f(6, 0, 3);
+
+	glVertex3f(6, 0, 3);
+	glVertex3f(6, 0, -3);
+	glVertex3f(6, 15, -3);
+	glVertex3f(6, 15, 3);
+
+	glVertex3f(6, 15, 3);
+	glVertex3f(6, 15, -3);
+	glVertex3f(-6, 15, -3);
+	glVertex3f(-6, 15, 3);
+
+	glVertex3f(-6, 15, 3);
+	glVertex3f(-6, 0, 3);
+	glVertex3f(-6, 0, -3);
+	glVertex3f(-6, 15, -3);
+
+	glVertex3f(-6, 15, -3);
+	glVertex3f(6, 15, -3);
+	glVertex3f(6, 0, -3);
+	glVertex3f(-6, 0, -3);
+	glEnd();
+}
+
+void road1() {
+	
+	glBegin(GL_QUADS);
+	glColor3f(0, 0, 0);
+	glVertex3f(6, 10, 4);
+	glVertex3f(6, 10, 24);
+	glVertex3f(6, 9, 24);
+	glVertex3f(6, 9, 4);
+
+	glVertex3f(6, 9, 4);
+	glVertex3f(-6, 9, 4);
+	glVertex3f(-6, 9, 24);
+	glVertex3f(6, 9, 24);
+
+	glVertex3f(6, 9, 24);
+	glVertex3f(-6, 9, 24);
+	glVertex3f(-6, 10, 24);
+	glVertex3f(6, 10, 24);
+
+	glVertex3f(6, 10, 24);
+	glVertex3f(-6, 10, 24);
+	glVertex3f(-6, 10, 4);
+	glVertex3f(6, 10, 4);
+
+	glVertex3f(6, 10, 4);
+	glVertex3f(6, 9, 4);
+	glVertex3f(-6, 9, 4);
+	glVertex3f(-6, 10, 4);
+
+	glVertex3f(-6, 10, 4);
+	glVertex3f(-6, 10, 24);
+	glVertex3f(-6, 9, 24);
+	glVertex3f(-6, 9, 4);
+	glEnd();
+}
+
+void roadRope() {
+	glPointSize(5);
+	glBegin(GL_POINTS);
+	glColor3ub(96, 96, 96);
+	for (int i = 45.0; i < 115.0; i++)
+	{
+		glVertex2f(0 + 5 * cos(i * -3.142 / 180), -0 + 6 * sin(i * -3.142 / 180));
+	}
+	glEnd();
+}
+
+void upperBridge() {
+	glBegin(GL_QUADS);
+	glColor3f(0, 0, 0);
+	glVertex3f(-12, 20.5, 6.5);
+	glVertex3f(12, 20.5, 6.5);
+	glVertex3f(12, 20, 6.5);
+	glVertex3f(-12, 20, 6.5);
+
+	glVertex3f(-12, 20, 6.5);
+	glVertex3f(-12, 20, 2.5);
+	glVertex3f(12, 20, 2.5);
+	glVertex3f(12, 20, 6.5);
+
+	glVertex3f(12, 20, 6.5);
+	glVertex3f(12, 20, 2.5);
+	glVertex3f(12, 20.5, 2.5);
+	glVertex3f(12, 20.5, 6.5);
+
+	glVertex3f(12, 20.5, 6.5);
+	glVertex3f(12, 20.5, 2.5);
+	glVertex3f(-12, 20.5, 2.5);
+	glVertex3f(12, 20.5, 6.5);
+
+	glVertex3f(12, 20.5, 6.5);
+	glVertex3f(-12, 20, 6.5);
+	glVertex3f(-12, 20, 2.5);
+	glVertex3f(-12, 20.5, 2.5);
+
+	glVertex3f(-12, 20.5, 2.5);
+	glVertex3f(12, 20.5, 2.5);
+	glVertex3f(12, 20, 2.5);
+	glVertex3f(-12, 20, 2.5);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor3f(0, 0, 0);
+	glVertex3f(-12, 20.5, -6.5);
+	glVertex3f(12, 20.5, -6.5);
+	glVertex3f(12, 20, -6.5);
+	glVertex3f(-12, 20, -6.5);
+
+	glVertex3f(-12, 20, -6.5);
+	glVertex3f(-12, 20, -2.5);
+	glVertex3f(12, 20, -2.5);
+	glVertex3f(12, 20, -6.5);
+
+	glVertex3f(12, 20, -6.5);
+	glVertex3f(12, 20, -2.5);
+	glVertex3f(12, 20.5, -2.5);
+	glVertex3f(12, 20.5, -6.5);
+
+	glVertex3f(12, 20.5, -6.5);
+	glVertex3f(12, 20.5, -2.5);
+	glVertex3f(-12, 20.5, -2.5);
+	glVertex3f(12, 20.5, -6.5);
+
+	glVertex3f(12, 20.5, -6.5);
+	glVertex3f(-12, 20, -6.5);
+	glVertex3f(-12, 20, -2.5);
+	glVertex3f(-12, 20.5, -2.5);
+
+	glVertex3f(-12, 20.5, -2.5);
+	glVertex3f(12, 20.5, -2.5);
+	glVertex3f(12, 20, -2.5);
+	glVertex3f(-12, 20, -2.5);
+	glEnd();
+}
+
+void movableBridge() {
+	glBegin(GL_QUADS);
+	glColor3f(0, 0, 0);
+	glVertex3f(0, 0, 6);
+	glVertex3f(11, 0, 6);
+	glVertex3f(11, 1, 6);
+	glVertex3f(0, 1, 6);
+
+	glVertex3f(0, 1, 6);
+	glVertex3f(0, 1, -6);
+	glVertex3f(11, 1, -6);
+	glVertex3f(11, 1, 6);
+
+	glVertex3f(11, 1, 6);
+	glVertex3f(11, 1, -6);
+	glVertex3f(11, 0, -6);
+	glVertex3f(11, 0, 6);
+
+	glVertex3f(11, 0, 6);
+	glVertex3f(11, 0, -6);
+	glVertex3f(0, 0, -6);
+	glVertex3f(0, 0, 6);
+
+	glVertex3f(0, 0, 6);
+	glVertex3f(0, 1, 6);
+	glVertex3f(0, 1, -6);
+	glVertex3f(0, 0, -6);
+
+	glVertex3f(0, 0, -6);
+	glVertex3f(11, 0, -6);
+	glVertex3f(11, 1, -6);
+	glVertex3f(0, 1, -6);
+	glEnd();
+}
+
+void combine1() {
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 25, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower6();
 	glPopMatrix();
 
 	glPushMatrix();
-	cyllinder = gluNewQuadric();
-	glColor3ub(0, 0, 0);
-	glTranslatef(0, -0.5, 0);
-	glRotatef(270, 1, 0, 0);
-	gluQuadricDrawStyle(cyllinder, GLU_LINE);
-	gluCylinder(cyllinder, 0.0, 0.18, 0.5, 20, 30);
-	gluDeleteQuadric(cyllinder);
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 25, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower6();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 25, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower6();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 25, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower6();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 27, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower4();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 27, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower4();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 27, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower4();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 27, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower4();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 0, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower2();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 0, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower2();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 0, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower2();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 0, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower2();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+
+	tower7();
+	tower5();
+	tower3();
+	tower1();
 	glPopMatrix();
 }
 
-void myRoll()
-{
-	GLUquadricObj* var = NULL;
-	var = gluNewQuadric();
+void combine2() {
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 25, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower6();
+	glPopMatrix();
 
 	glPushMatrix();
-	glColor3ub(87, 48, 0);
-	glTranslatef(0.05, 0.25, 0.05);
-	glRotatef(-90, 1, 0, 1);
-	//gluQuadricDrawStyle(var, GLU_LINE);
-	gluCylinder(var, 0.03f, 0.03f, 0.3f, 32, 32);
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 25, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower6();
 	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 25, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower6();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 25, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower6();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 27, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower4();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 27, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower4();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 27, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower4();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 27, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower4();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 0, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower2();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(6, 0, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower2();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 0, -3);
+	glRotatef(-90, 1, 0, 0);
+	tower2();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(-6, 0, 3);
+	glRotatef(-90, 1, 0, 0);
+	tower2();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	
+	tower7();
+	tower5();
+	tower3();
+	tower1();
+	glPopMatrix();
+}
+
+void combine3() {
+	glPushMatrix();
+	glTranslatef(15, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	road1();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-43, 0, 0);
+	glRotatef(90, 0, 1, 0);
+	road1();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0, 0, 6);
+	glScalef(3.5, 3.5, 0);
+	glTranslatef(-8.8, 10, 0);
+	roadRope();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0, 0, -6);
+	glScalef(3.5, 3.5, 0);
+	glTranslatef(-8.8, 10, 0);
+	roadRope();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0, 0, -6);
+	glRotatef(180, 0, 1, 0);
+	glScalef(3.5, 3.5, 0);
+	glTranslatef(-8.8, 10, 0);
+	roadRope();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0, 0, 6);
+	glRotatef(180, 0, 1, 0);
+	glScalef(3.5, 3.5, 0);
+	glTranslatef(-8.8, 10, 0);
+	roadRope();
+	glPopMatrix();
+}
+
+void combine4() {
+	upperBridge();
+
+	if (open >= 1) {
+		close = 0;
+		speed += 0.10;
+		transf += 0.032;
+		if (speed >= 45) {
+			open = 0;
+			transf = 29;
+			speed = 45;
+		}
+	}
+	else if (close >= 1) {
+		open = 0;
+		speed -= 0.032;
+		transf -= 5;
+		if (speed <= 0) {
+			close = 0;
+			speed = 0;
+			transf = 14.5;
+		}
+	}
+
+	glPushMatrix();
+	glTranslatef(0, transf, 0);
+	sun();
+	glPopMatrix();
+
+	glPushMatrix();
+	glRotatef(180, 0, 1, 0);
+	glTranslatef(-11, 9, 0);
+	glRotatef(speed, 0, 0, 1);
+	movableBridge();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-11, 9, 0);
+	glRotatef(speed, 0, 0, 1);
+	movableBridge();
+	glPopMatrix();
+
+	
+}
+
+void sun() {
+
+	float x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
+	float angle = 0.0;
+	float radius = 5;
+	glColor3ub(255, 128, 0);
+	
+	glBegin(GL_TRIANGLE_FAN);
+
+
+	for (angle = 0; angle <= 360.0; angle += 0.2) {
+		x2 = x1 + cos(angle) * radius;
+		y2 = y1 + sin(angle) * radius;
+		glVertex2f(x2, y2);
+	}
+	glEnd();
 }
 
 void display()
 {
-	rotatedeg += 0.05;
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-
-	glPushMatrix();
-	//glRotatef(rotatedeg, 0, 1, 0);
+	glClearColor(0.0, 1.0, 1.0, 1.0);
+	
 	glMatrixMode(GL_MODELVIEW);
-	glTranslatef(0, 0, z);
-	cone();
-	icecream();
-	topping();
-	myRoll();
+	
+	glLoadIdentity();
+	glTranslatef(0.0, -10.0, viewDistance);
+	glRotatef(rotateY, 0, 1, 0);
+	glPushMatrix();
+	
+	combine1();
+	combine2();
+	combine3();
+	combine4();
+	
 	glPopMatrix();
+	
 }
 //--------------------------------------------------------------------
 
-int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE prevInstance,
-	_In_ LPSTR cmdLine, _In_ int nCmdShow) // FIXED
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 {
 	WNDCLASSEX wc;
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
@@ -203,7 +756,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE prevInstance,
 	if (!RegisterClassEx(&wc)) return false;
 
 	HWND hWnd = CreateWindow(WINDOW_TITLE, WINDOW_TITLE, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 800, 800,
+		CW_USEDEFAULT, CW_USEDEFAULT, 600, 600,
 		NULL, NULL, wc.hInstance, NULL);
 
 	//--------------------------------
@@ -232,10 +785,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE prevInstance,
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-	//gluPerspective(60.0, 1.0, -1.0, 1.0);
-	//glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 10.0);
-	
+
+	gluPerspective(70, 1, 1, 2000);
+
 	while (true)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -245,7 +797,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE prevInstance,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-
 
 		display();
 
