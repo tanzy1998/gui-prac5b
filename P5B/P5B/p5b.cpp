@@ -10,7 +10,7 @@
 
 float speed = 0.0;
 int open = 0, close = 0;
-float transf = 14.5;
+float transf = 29;
 int x = 0, y = 0, z = 0;
 int x2 = 0, y2 = 0, z2 = 0;
 float speed2 = 0.1, speed3 = -0.1;
@@ -247,7 +247,7 @@ void tower7() {
 }
 
 void road1() {
-	
+
 	glBegin(GL_QUADS);
 	glColor3f(0, 0, 0);
 	glVertex3f(6, 10, 4);
@@ -604,7 +604,7 @@ void combine2() {
 	glPushMatrix();
 	glTranslatef(-15, 0, 0);
 	glRotatef(90, 0, 1, 0);
-	
+
 	tower7();
 	tower5();
 	tower3();
@@ -662,21 +662,21 @@ void combine4() {
 	if (open >= 1) {
 		close = 0;
 		speed += 0.10;
-		transf += 0.032;
+		transf -= 0.032;
 		if (speed >= 45) {
 			open = 0;
-			transf = 29;
+			transf = 12;
 			speed = 45;
 		}
 	}
 	else if (close >= 1) {
 		open = 0;
-		speed -= 0.032;
-		transf -= 5;
+		speed -= 0.10;
+		transf += 0.032;
 		if (speed <= 0) {
 			close = 0;
 			speed = 0;
-			transf = 14.5;
+			transf = 29;
 		}
 	}
 
@@ -698,25 +698,17 @@ void combine4() {
 	movableBridge();
 	glPopMatrix();
 
-	
+
 }
 
 void sun() {
 
-	float x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0;
-	float angle = 0.0;
-	float radius = 5;
-	glColor3ub(255, 128, 0);
-	
-	glBegin(GL_TRIANGLE_FAN);
-
-
-	for (angle = 0; angle <= 360.0; angle += 0.2) {
-		x2 = x1 + cos(angle) * radius;
-		y2 = y1 + sin(angle) * radius;
-		glVertex2f(x2, y2);
-	}
-	glEnd();
+	GLUquadricObj* sphere = NULL;
+	sphere = gluNewQuadric();
+	glColor3ub(255, 165, 0);
+	gluQuadricDrawStyle(sphere, GLU_FILL);
+	gluSphere(sphere, 6, 30, 30);
+	gluDeleteQuadric(sphere);
 }
 
 void display()
@@ -724,21 +716,21 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0, 1.0, 1.0, 1.0);
-	
+
 	glMatrixMode(GL_MODELVIEW);
-	
+
 	glLoadIdentity();
 	glTranslatef(0.0, -10.0, viewDistance);
 	glRotatef(rotateY, 0, 1, 0);
 	glPushMatrix();
-	
+
 	combine1();
 	combine2();
 	combine3();
 	combine4();
-	
+
 	glPopMatrix();
-	
+
 }
 //--------------------------------------------------------------------
 
